@@ -22,7 +22,7 @@ export async function submitContactForm(formData) {
   try {
     await resend.emails.send({
       from: 'Contact Form <onboarding@resend.dev>',
-      to: 'kush2012bhardwaj@gmail.com',
+      to: 'ravi@eclparcel.in',
       subject: 'New Contact Form Submission',
       text: `
         Name: ${name}
