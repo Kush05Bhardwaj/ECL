@@ -32,7 +32,7 @@ export async function GET(req) {
         location: event.status_location || 'Location not available'
       }))
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
