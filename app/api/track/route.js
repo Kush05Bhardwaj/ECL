@@ -58,7 +58,7 @@ const getStatusCode = (status) => {
 async function fetchTrackingData(awb, provider) {
   const authToken = Buffer.from(`${provider.accessKey}:${provider.secretKey}`).toString('base64')
 
-const response = await fetch(`https://app.parcelx.in/api/v1/track_order?awb=${awb}`, {
+const response = await fetch(`https://parcelx.in/tracking.php?waybill_no=${awb}`, {
   headers: {
     'Accept': 'application/json',
     'Authorization': `Basic ${authToken}`,
