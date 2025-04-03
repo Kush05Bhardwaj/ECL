@@ -6,35 +6,29 @@ import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Package, Truck, Circle, CheckCircle, RotateCcw, X, AlertTriangle } from 'lucide-react'
 
+const StatusIcon = ({ status }) => {
+  if (!status) return <Package className="h-5 w-5 text-gray-500" />
+  const lowerStatus = status.toLowerCase()
 
-
-const StatusIcon = ({ code }) => {
-  switch (code) {
-    case '220': // Pending
-    case '232': // Pickup Pending
-    case '235': // RTO - Pending
-    case '531': // On Process
-      return <Circle className="h-5 w-5 text-yellow-500" />
-    case '226': // Delivered
-      return <CheckCircle className="h-5 w-5 text-green-500" />
-    case '223': // In Transit
-    case '228': // Dispatched
-    case '234': // RTO - In Transit
-    case '236': // RTO - OFD
-      return <Truck className="h-5 w-5 text-blue-500" />
-    case '224': // RTS
-    case '225': // RTO
-      return <RotateCcw className="h-5 w-5 text-orange-500" />
-    case '227': // Cancelled
-    case '229': // Failed
-    case '231': // Not Picked
-    case '237': // LOST
-      return <X className="h-5 w-5 text-red-500" />
-    case '233': // NDR
-      return <AlertTriangle className="h-5 w-5 text-orange-500" />
-    default:
-      return <Package className="h-5 w-5 text-blue-500" />
+  if (lowerStatus.includes('pending') || lowerStatus.includes('on process')) {
+    return <Circle className="h-5 w-5 text-yellow-500" />
   }
+  if (lowerStatus.includes('delivered')) {
+    return <CheckCircle className="h-5 w-5 text-green-500" />
+  }
+  if (lowerStatus.includes('transit') || lowerStatus.includes('dispatched')) {
+    return <Truck className="h-5 w-5 text-blue-500" />
+  }
+  if (lowerStatus.includes('rts') || lowerStatus.includes('rto')) {
+    return <RotateCcw className="h-5 w-5 text-orange-500" />
+  }
+  if (lowerStatus.includes('cancelled') || lowerStatus.includes('failed') || lowerStatus.includes('lost')) {
+    return <X className="h-5 w-5 text-red-500" />
+  }
+  if (lowerStatus.includes('ndr')) {
+    return <AlertTriangle className="h-5 w-5 text-orange-500" />
+  }
+  return <Package className="h-5 w-5 text-gray-500" />
 }
 
 export default function TrackingForm() {
@@ -44,26 +38,27 @@ export default function TrackingForm() {
   const [trackingData, setTrackingData] = useState(null)
 
   const handleTracking = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    setTrackingData(null)
-    
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setTrackingData(null);
+  
     try {
-      const response = await fetch(`/api/track?awb=${awb}`)
-      const data = await response.json()
-
+      const response = await fetch(`/api/track?awb=${awb}`);
+      const data = await response.json();
+  
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch tracking data')
+        throw new Error(data.error || 'Failed to fetch tracking data');
       }
-
-      setTrackingData(data)
+  
+      setTrackingData(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to track shipment')
+      setError(err.message || 'Failed to track shipment');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+  
 
   return (
     <div className="space-y-8">
@@ -110,24 +105,20 @@ export default function TrackingForm() {
           <div className="bg-gray-50 p-6 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">Current Status</h3>
             <div className="flex items-start gap-2">
-              <StatusIcon code={trackingData.status_code} />
+              <StatusIcon status={trackingData.status} />
               <div>
                 <p className="text-gray-900 font-medium">{trackingData.status}</p>
-                <div className="text-sm text-gray-600 mt-1">{trackingData.timestamp}</div>
-                {trackingData.location && trackingData.location !== 'Location not available' && (
-                  <div className="text-sm text-gray-600 mt-1">📍 {trackingData.location}</div>
-                )}
               </div>
             </div>
 
-            {trackingData.tracking_details && trackingData.tracking_details.length > 0 ? (
+            {trackingData.tracking_details.length > 0 ? (
               <div className="mt-6">
                 <h4 className="font-semibold mb-4">Tracking History</h4>
                 <div className="space-y-4">
                   {trackingData.tracking_details.map((detail, index) => (
                     <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
                       <div className="flex items-center gap-2">
-                        <StatusIcon code={detail.status_code} />
+                        <StatusIcon status={detail.status} />
                         <div>
                           <div className="font-medium text-gray-900">{detail.status}</div>
                           <div className="text-sm text-gray-600 mt-1">{detail.timestamp}</div>
@@ -149,4 +140,3 @@ export default function TrackingForm() {
     </div>
   )
 }
-
