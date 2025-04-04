@@ -129,7 +129,6 @@ export default function TrackingForm() {
                   <TableHead>Status</TableHead>
                   <TableHead>Timestamp</TableHead>
                   <TableHead>Location</TableHead>
-                  <TableHead>Remark</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -143,9 +142,6 @@ export default function TrackingForm() {
                       </TableCell>
                       <TableCell>{event.timestamp}</TableCell>
                       <TableCell>{event.location}</TableCell>
-                      <TableCell>
-                        {event.remark && event.remark.trim() !== "" ? event.remark : "N/A"}
-                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -161,7 +157,6 @@ export default function TrackingForm() {
                   <TableHead>Status</TableHead>
                   <TableHead>Timestamp</TableHead>
                   <TableHead>Location</TableHead>
-                  <TableHead>Remark</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -175,9 +170,6 @@ export default function TrackingForm() {
                       </TableCell>
                       <TableCell>{event.timestamp}</TableCell>
                       <TableCell>{event.location}</TableCell>
-                      <TableCell>
-                        {event.remark && event.remark.trim() !== "" ? event.remark : "N/A"}
-                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
